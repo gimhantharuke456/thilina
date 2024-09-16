@@ -13,6 +13,8 @@ import ProductManagement from "./ProductManagement";
 import SalesManagement from "./SalesManagement";
 import UtilityExpencesManagement from "./UtilityExpencesManagement";
 import UserManagement from "./UserManagement";
+import EmployeeManagement from "./EmployeeManagement";
+import EmployeeAttendanceManagement from "./EmployeeAttendanceManagement";
 
 const { Content, Sider } = Layout;
 
@@ -78,6 +80,24 @@ const AdminDashboard: React.FC = () => {
             >
               Salary Management
             </Menu.Item>
+            <Menu.Item
+              onClick={() => {
+                onMenuItemClicked(5);
+              }}
+              key="5"
+              icon={<MoneyCollectFilled />}
+            >
+              Employee Management
+            </Menu.Item>
+            <Menu.Item
+              onClick={() => {
+                onMenuItemClicked(6);
+              }}
+              key="6"
+              icon={<MoneyCollectFilled />}
+            >
+              Attendance Management
+            </Menu.Item>
           </Menu>
         </Sider>
         <Layout style={{ padding: "0 24px 24px" }}>
@@ -93,6 +113,8 @@ const AdminDashboard: React.FC = () => {
             {activeIndex === 2 && <ProductManagement />}
             {activeIndex === 3 && <SalesManagement />}
             {activeIndex === 4 && <SalaryManagement />}
+            {activeIndex === 5 && <EmployeeManagement />}
+            {activeIndex === 6 && <EmployeeAttendanceManagement />}
           </Content>
         </Layout>
       </Layout>
