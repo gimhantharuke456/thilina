@@ -15,6 +15,7 @@ import UtilityExpencesManagement from "./UtilityExpencesManagement";
 import UserManagement from "./UserManagement";
 import EmployeeManagement from "./EmployeeManagement";
 import EmployeeAttendanceManagement from "./EmployeeAttendanceManagement";
+import InventoryAndSales from "./InventoryAndSales";
 
 const { Content, Sider } = Layout;
 
@@ -53,7 +54,7 @@ const AdminDashboard: React.FC = () => {
             >
               Utility Expences
             </Menu.Item>
-            <Menu.Item
+            {/* <Menu.Item
               onClick={() => {
                 onMenuItemClicked(2);
               }}
@@ -70,7 +71,7 @@ const AdminDashboard: React.FC = () => {
               icon={<ShopFilled />}
             >
               Sales
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item
               onClick={() => {
                 onMenuItemClicked(4);
@@ -98,6 +99,15 @@ const AdminDashboard: React.FC = () => {
             >
               Attendance Management
             </Menu.Item>
+            <Menu.Item
+              onClick={() => {
+                onMenuItemClicked(7);
+              }}
+              key="7"
+              icon={<MoneyCollectFilled />}
+            >
+              Invetory & Sales
+            </Menu.Item>
           </Menu>
         </Sider>
         <Layout style={{ padding: "0 24px 24px" }}>
@@ -110,11 +120,12 @@ const AdminDashboard: React.FC = () => {
           >
             {activeIndex === 0 && <UserManagement />}
             {activeIndex === 1 && <UtilityExpencesManagement />}
-            {activeIndex === 2 && <ProductManagement />}
-            {activeIndex === 3 && <SalesManagement />}
+            {/* {activeIndex === 2 && <ProductManagement />}
+            {activeIndex === 3 && <SalesManagement />} */}
             {activeIndex === 4 && <SalaryManagement />}
             {activeIndex === 5 && <EmployeeManagement />}
             {activeIndex === 6 && <EmployeeAttendanceManagement />}
+            {activeIndex === 7 && <InventoryAndSales />}
           </Content>
         </Layout>
       </Layout>
