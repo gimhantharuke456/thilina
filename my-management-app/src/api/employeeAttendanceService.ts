@@ -1,7 +1,7 @@
 // src/services/employeeAttendanceService.ts
 import axiosInstance from "./axiosInstance";
 
-const ATTENDANCE_URL = "/employee-attendance";
+const ATTENDANCE_URL = "/attendance";
 
 // Get all employee attendance records
 export const getAllAttendanceRecords = async () => {
