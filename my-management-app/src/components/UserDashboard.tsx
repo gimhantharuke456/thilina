@@ -58,7 +58,12 @@ const UserDashboard: React.FC = () => {
             />
           )}
           <DashboardButton label="Vehicle Registration" />
-          <DashboardButton label="Appointment" />
+          <DashboardButton
+            onClick={() => {
+              navigate("/appointments");
+            }}
+            label="Appointment"
+          />
           <DashboardButton label="Payment" />
         </ButtonContainer>
       </Content>

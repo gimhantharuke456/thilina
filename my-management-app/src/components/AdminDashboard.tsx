@@ -2,20 +2,18 @@ import React, { useState } from "react";
 import { Layout, Menu } from "antd";
 import {
   MoneyCollectOutlined,
-  LaptopOutlined,
-  ShopFilled,
   MoneyCollectFilled,
   UserOutlined,
 } from "@ant-design/icons";
 import "../App.css";
 import SalaryManagement from "./SalaryManagement";
-import ProductManagement from "./ProductManagement";
-import SalesManagement from "./SalesManagement";
+
 import UtilityExpencesManagement from "./UtilityExpencesManagement";
 import UserManagement from "./UserManagement";
 import EmployeeManagement from "./EmployeeManagement";
 import EmployeeAttendanceManagement from "./EmployeeAttendanceManagement";
 import InventoryAndSales from "./InventoryAndSales";
+import Appointment from "./Appointment";
 
 const { Content, Sider } = Layout;
 
@@ -108,6 +106,15 @@ const AdminDashboard: React.FC = () => {
             >
               Invetory & Sales
             </Menu.Item>
+            <Menu.Item
+              onClick={() => {
+                onMenuItemClicked(8);
+              }}
+              key="8"
+              icon={<MoneyCollectFilled />}
+            >
+              Appointments
+            </Menu.Item>
           </Menu>
         </Sider>
         <Layout style={{ padding: "0 24px 24px" }}>
@@ -126,6 +133,7 @@ const AdminDashboard: React.FC = () => {
             {activeIndex === 5 && <EmployeeManagement />}
             {activeIndex === 6 && <EmployeeAttendanceManagement />}
             {activeIndex === 7 && <InventoryAndSales />}
+            {activeIndex === 8 && <Appointment />}
           </Content>
         </Layout>
       </Layout>

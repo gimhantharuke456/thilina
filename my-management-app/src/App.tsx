@@ -4,6 +4,7 @@ import UserDashboard from "./components/UserDashboard";
 import Login from "./components/Login";
 import UserProfile from "./components/UserProfile";
 import RuchiraLankaSignup from "./components/Signup";
+import MakeAppointment from "./components/MakeAppointment";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<RuchiraLankaSignup />} />
         <Route path="/profile" element={<UserProfile />} />
+        <Route path="/appointments" element={<MakeAppointment />} />
       </Routes>
     </BrowserRouter>
   );
