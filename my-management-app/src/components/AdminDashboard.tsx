@@ -7,13 +7,13 @@ import {
 } from "@ant-design/icons";
 import "../App.css";
 import SalaryManagement from "./SalaryManagement";
-
 import UtilityExpencesManagement from "./UtilityExpencesManagement";
 import UserManagement from "./UserManagement";
 import EmployeeManagement from "./EmployeeManagement";
 import EmployeeAttendanceManagement from "./EmployeeAttendanceManagement";
 import InventoryAndSales from "./InventoryAndSales";
 import Appointment from "./Appointment";
+import ServiceType from "./ServiceType"; // Import your ServiceType component
 
 const { Content, Sider } = Layout;
 
@@ -50,9 +50,10 @@ const AdminDashboard: React.FC = () => {
               key="1"
               icon={<MoneyCollectOutlined />}
             >
-              Utility Expences
+              Utility Expenses
             </Menu.Item>
-            {/* <Menu.Item
+            {/* Uncomment and modify if necessary
+            <Menu.Item
               onClick={() => {
                 onMenuItemClicked(2);
               }}
@@ -69,7 +70,8 @@ const AdminDashboard: React.FC = () => {
               icon={<ShopFilled />}
             >
               Sales
-            </Menu.Item> */}
+            </Menu.Item>
+            */}
             <Menu.Item
               onClick={() => {
                 onMenuItemClicked(4);
@@ -104,7 +106,7 @@ const AdminDashboard: React.FC = () => {
               key="7"
               icon={<MoneyCollectFilled />}
             >
-              Invetory & Sales
+              Inventory & Sales
             </Menu.Item>
             <Menu.Item
               onClick={() => {
@@ -114,6 +116,16 @@ const AdminDashboard: React.FC = () => {
               icon={<MoneyCollectFilled />}
             >
               Appointments
+            </Menu.Item>
+            {/* New Service Type Menu Item */}
+            <Menu.Item
+              onClick={() => {
+                onMenuItemClicked(9);
+              }}
+              key="9"
+              icon={<MoneyCollectFilled />}
+            >
+              Service Types
             </Menu.Item>
           </Menu>
         </Sider>
@@ -127,13 +139,16 @@ const AdminDashboard: React.FC = () => {
           >
             {activeIndex === 0 && <UserManagement />}
             {activeIndex === 1 && <UtilityExpencesManagement />}
-            {/* {activeIndex === 2 && <ProductManagement />}
+            {/* Uncomment and modify if necessary
+            {activeIndex === 2 && <ProductManagement />}
             {activeIndex === 3 && <SalesManagement />} */}
             {activeIndex === 4 && <SalaryManagement />}
             {activeIndex === 5 && <EmployeeManagement />}
             {activeIndex === 6 && <EmployeeAttendanceManagement />}
             {activeIndex === 7 && <InventoryAndSales />}
             {activeIndex === 8 && <Appointment />}
+            {/* Render the ServiceType component */}
+            {activeIndex === 9 && <ServiceType />}
           </Content>
         </Layout>
       </Layout>
