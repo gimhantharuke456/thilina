@@ -30,6 +30,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Salary, SalarySchema, SalaryType } from "../models/SalaryModel";
 import dayjs, { Dayjs } from "dayjs";
+import moment from "moment";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -390,8 +391,14 @@ const SalaryManagement: React.FC = () => {
             name="date"
             rules={[{ required: true, message: "Please select a date!" }]}
           >
-            <DatePicker />
+            <DatePicker
+              disabledDate={(current) => {
+                // Disable dates before today
+                return current && current < moment().startOf('day');
+              }}
+            />
           </Form.Item>
+
 
           <Form.Item
             label="Phone"
