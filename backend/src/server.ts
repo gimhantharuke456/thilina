@@ -11,6 +11,7 @@ import fuelUserRoutes from "./routes/fuelUserRoutes";
 import employeeRoutes from "./routes/employeeRoutes";
 import employeeAttendanceRoutes from "./routes/employeeAttendanceRoutes";
 import appointmentRoutes from "./routes/appointmentRoutes";
+import serviceTypeRoutes from "./routes/ServiceTypeRoutes";
 dotenv.config();
 
 const app = express();
@@ -32,6 +33,8 @@ app.use("/api/fuel-users", fuelUserRoutes);
 app.use("/api/employee", employeeRoutes);
 app.use("/api/attendance", employeeAttendanceRoutes);
 app.use("/api/appointment", appointmentRoutes);
+app.use("/api/service-types", serviceTypeRoutes);
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

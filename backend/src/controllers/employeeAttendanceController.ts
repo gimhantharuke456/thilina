@@ -32,6 +32,18 @@ export const getAllAttendance = async (req: Request, res: Response) => {
   }
 };
 
+export const getAttendanceByEmployeeId = async (req: Request, res: Response) => {
+  try {
+    const attendanceRecords =
+      await employeeAttendanceService.getAttendanceByEmployeeId(
+        req.params.id
+      );
+    res.json(attendanceRecords);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching attendance records" });
+  }
+};
+
 export const getAttendanceById = async (req: Request, res: Response) => {
   try {
     const attendanceRecord = await employeeAttendanceService.getAttendanceById(

@@ -183,6 +183,7 @@ const UtilityExpensesManagement: React.FC = () => {
   ];
 
   return (
+    <div style={styles.container}>
     <Spin spinning={loading}>
       <div
         style={{
@@ -277,7 +278,20 @@ const UtilityExpensesManagement: React.FC = () => {
         </Form>
       </Modal>
     </Spin>
+    </div>
   );
 };
 
 export default UtilityExpensesManagement;
+
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundImage: 'url("/bg-6.jpg")', // Replace with actual image link
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+}

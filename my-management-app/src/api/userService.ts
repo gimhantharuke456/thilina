@@ -38,3 +38,13 @@ export const loginUser = async (
   const response = await axios.post(`${API_URL}/login`, { email, password });
   return response.data;
 };
+
+export const checkEmailAndUpdatePassword = async (email: string, password: string): Promise<User> => {
+  try {
+    const response = await axios.put(`${API_URL}/update-password`, { email, password });
+    return response.data;
+  } catch (error) {
+    throw error; // Re-throw error to be caught in the component
+  }
+};
+

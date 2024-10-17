@@ -8,6 +8,7 @@ router.post("/", fuelUserController.createFuelUser);
 router.get("/", fuelUserController.getAllFuelUsers);
 router.get("/:id", fuelUserController.getFuelUserById);
 router.put("/:id", fuelUserController.updateFuelUser);
+router.put("/update-password", fuelUserController.checkEmailAndUpdatePassword);
 router.delete("/:id", fuelUserController.deleteFuelUser);
 router.post("/login", fuelUserController.loginFuelUser);
 

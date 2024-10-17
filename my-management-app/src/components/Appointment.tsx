@@ -211,7 +211,14 @@ const Appointment = () => {
   ];
 
   return (
-    <>
+    <div
+    style={{
+      backgroundImage: 'url("bg-7.jpg")',
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      minHeight: "100vh", // Adjust this to fit the height
+      padding: "20px",
+    }}>
       <Input
         placeholder="Search by car number"
         onChange={(e) => setSearchText(e.target.value)}
@@ -266,7 +273,7 @@ const Appointment = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </>
+    </div>
   );
 };
 

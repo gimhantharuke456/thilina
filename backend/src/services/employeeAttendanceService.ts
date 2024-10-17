@@ -20,6 +20,11 @@ export const getAttendanceById = async (id: string) => {
   return await EmployeeAttendance.findById(id);
 };
 
+export const getAttendanceByEmployeeId = async (id: string) => {
+  return await EmployeeAttendance.find({ employeeId: id });
+};
+
+
 export const updateAttendanceRecord = async (
   id: string,
   attendanceData: Partial<EmployeeAttendanceType>

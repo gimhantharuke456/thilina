@@ -66,3 +66,13 @@ export const deleteAttendanceRecord = async (id: string) => {
     throw error;
   }
 };
+
+export const getAttendanceByEmployeeId = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`${ATTENDANCE_URL}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching attendance record:", error);
+    throw error;
+  }
+};

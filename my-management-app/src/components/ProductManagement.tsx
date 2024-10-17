@@ -9,6 +9,7 @@ import {
   Spin,
   Modal,
   DatePicker,
+  Select ,
 } from "antd";
 import {
   EditOutlined,
@@ -36,6 +37,7 @@ const ProductManagement: React.FC = () => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingRecord, setEditingRecord] = useState<Product | null>(null);
+  const { Option } = Select;
 
   useEffect(() => {
     fetchProducts();
@@ -239,15 +241,18 @@ const ProductManagement: React.FC = () => {
           <Form.Item
             name="category"
             label="Category"
-            rules={[
-              { required: true, message: "Please input the product category!" },
-            ]}
+            rules={[{ required: true, message: "Please select the product category!" }]}
           >
-            <Input />
+            <Select placeholder="Select a category">
+              <Option value="Petrol">Petrol</Option>
+              <Option value="Diesel">Diesel</Option>
+              <Option value="Lubricants">Lubricants</Option>
+              <Option value="Kerosene">Kerosene</Option>
+            </Select>
           </Form.Item>
           <Form.Item
             name="quantity"
-            label="Quantity"
+            label="Volume & Quantity"
             rules={[{ required: true, message: "Please input the quantity!" }]}
           >
             <Input type="number" />
