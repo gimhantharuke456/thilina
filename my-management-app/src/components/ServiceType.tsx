@@ -120,6 +120,7 @@ const ServiceTypeManager: React.FC = () => {
   ];
 
   return (
+    <div style={styles.container}>
     <Spin spinning={loading}>
       <Button onClick={() => setModalOpened(true)} type="primary" style={{ marginBottom: 16 }}>
         Create Service Type
@@ -154,7 +155,20 @@ const ServiceTypeManager: React.FC = () => {
         </Form>
       </Modal>
     </Spin>
+    </div>
   );
 };
 
 export default ServiceTypeManager;
+
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundImage: 'url("/bg-8.jpg")', // Replace with actual image link
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+}
