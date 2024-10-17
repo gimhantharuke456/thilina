@@ -1,4 +1,3 @@
-// src/components/UtilityExpensesManagement.tsx
 import React, { useEffect, useState } from "react";
 import {
   Form,
@@ -39,13 +38,9 @@ const UtilityExpensesManagement: React.FC = () => {
   const [form] = Form.useForm();
   const [modalOpened, setModalOpened] = useState<boolean>(false);
   const [expenses, setExpenses] = useState<UtilityExpense[]>([]);
-  const [filteredExpenses, setFilteredExpenses] = useState<UtilityExpense[]>(
-    []
-  );
+  const [filteredExpenses, setFilteredExpenses] = useState<UtilityExpense[]>([]);
   const [loading, setLoading] = useState(false);
-  const [editingRecord, setEditingRecord] = useState<UtilityExpense | null>(
-    null
-  );
+  const [editingRecord, setEditingRecord] = useState<UtilityExpense | null>(null);
 
   useEffect(() => {
     fetchExpenses();
@@ -92,9 +87,7 @@ const UtilityExpensesManagement: React.FC = () => {
       if (error instanceof Error) {
         message.error(`Failed to save utility expense: ${error.message}`);
       } else {
-        message.error(
-          "Failed to save utility expense due to an unknown error."
-        );
+        message.error("Failed to save utility expense due to an unknown error.");
       }
     } finally {
       setLoading(false);
@@ -149,6 +142,10 @@ const UtilityExpensesManagement: React.FC = () => {
     setFilteredExpenses(filtered);
   };
 
+  const calculateTotalExpenses = () => {
+    return filteredExpenses.reduce((total, expense) => total + expense.amount, 0);
+  };
+
   const columns = [
     { title: "Type", dataIndex: "type", key: "type" },
     { title: "Amount", dataIndex: "amount", key: "amount" },
@@ -164,11 +161,7 @@ const UtilityExpensesManagement: React.FC = () => {
       key: "action",
       render: (text: any, record: UtilityExpense) => (
         <span>
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => handleEdit(record)}
-            type="link"
-          />
+          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} type="link" />
           <Popconfirm
             title="Are you sure you want to delete this utility expense?"
             onConfirm={() => handleDelete(record._id)}
@@ -184,100 +177,94 @@ const UtilityExpensesManagement: React.FC = () => {
 
   return (
     <div style={styles.container}>
-    <Spin spinning={loading}>
-      <div
-        style={{
-          marginBottom: 16,
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <Search
-          placeholder="Search by type"
-          onSearch={handleSearch}
-          style={{ width: 200 }}
-        />
-        <div>
-          <Button
-            icon={<PlusOutlined />}
-            onClick={() => {
-              setEditingRecord(null);
-              form.resetFields();
-              setModalOpened(true);
-            }}
-            style={{ marginRight: 8 }}
-          >
-            Create Utility Expense
-          </Button>
-          <Button
-            icon={<FileTextOutlined />}
-            onClick={generateReport}
-            type="primary"
-          >
-            Generate Report
-          </Button>
-        </div>
-      </div>
-      <Table columns={columns} dataSource={filteredExpenses} rowKey="_id" />
-      <Modal
-        title={
-          editingRecord ? "Edit Utility Expense" : "Create Utility Expense"
-        }
-        open={modalOpened}
-        onCancel={() => setModalOpened(false)}
-        footer={null}
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={onFinish}
-          initialValues={{ remember: true }}
+      <Spin spinning={loading}>
+        <div
+          style={{
+            marginBottom: 16,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
         >
-          <Form.Item
-            name="type"
-            label="Type"
-            rules={[
-              { required: true, message: "Please input the expense type!" },
-            ]}
-          >
-            <Select>
-              <Select.Option value="Electricity">Electricity</Select.Option>
-              <Select.Option value="Water">Water</Select.Option>
-              <Select.Option value="Other">Other</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="amount"
-            label="Amount"
-            rules={[{ required: true, message: "Please input the amount!" }]}
-          >
-            <Input type="number" step="0.01" />
-          </Form.Item>
-          <Form.Item
-            name="date"
-            label="Date"
-            rules={[
-              {
-                required: true,
-                message: "Please select the date!",
-              },
-            ]}
-          >
-            <DatePicker />
-          </Form.Item>
-          <Form.Item name="description" label="Description">
-            <Input.TextArea />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              {editingRecord
-                ? "Update Utility Expense"
-                : "Create Utility Expense"}
+          <Search
+            placeholder="Search by type"
+            onSearch={handleSearch}
+            style={{ width: 200 }}
+          />
+          
+
+          <div>
+            <Button
+              icon={<PlusOutlined />}
+              onClick={() => {
+                setEditingRecord(null);
+                form.resetFields();
+                setModalOpened(true);
+              }}
+              style={{ marginRight: 8 }}
+            >
+              Create Utility Expense
             </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-    </Spin>
+            <Button icon={<FileTextOutlined />} onClick={generateReport} type="primary">
+              Generate Report
+            </Button>
+          </div>
+        </div>
+
+        <div style={{ marginTop: 16, fontWeight: "Thin", textAlign: "right",fontSize:18, backgroundColor:"black",color:"white", borderRadius:6,padding:5}}>
+            Total Expenses: Rs{calculateTotalExpenses().toFixed(2)}
+        </div>
+
+        <Table columns={columns} dataSource={filteredExpenses} rowKey="_id" />
+        
+        <Modal
+          title={editingRecord ? "Edit Utility Expense" : "Create Utility Expense"}
+          open={modalOpened}
+          onCancel={() => setModalOpened(false)}
+          footer={null}
+        >
+          <Form form={form} layout="vertical" onFinish={onFinish} initialValues={{ remember: true }}>
+            <Form.Item
+              name="type"
+              label="Type"
+              rules={[{ required: true, message: "Please input the expense type!" }]}
+            >
+              <Select>
+                <Select.Option value="Electricity">Electricity</Select.Option>
+                <Select.Option value="Water">Water</Select.Option>
+                <Select.Option value="Other">Other</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              name="amount"
+              label="Amount"
+              rules={[{ required: true, message: "Please input the amount!" }]}
+            >
+              <Input type="number" step="0.01" />
+            </Form.Item>
+            <Form.Item
+              name="date"
+              label="Date"
+              rules={[{ required: true, message: "Please select the date!" }]}
+            >
+              <DatePicker
+                disabledDate={(current) => {
+                  // Disable dates before today
+                  return current && current < moment().startOf("day");
+                }}
+              />
+            </Form.Item>
+
+            <Form.Item name="description" label="Description">
+              <Input.TextArea />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                {editingRecord ? "Update Utility Expense" : "Create Utility Expense"}
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+      </Spin>
     </div>
   );
 };
@@ -286,12 +273,12 @@ export default UtilityExpensesManagement;
 
 const styles = {
   container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
     backgroundImage: 'url("/bg-6.jpg")', // Replace with actual image link
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
+    backgroundSize: "cover",
+    backgroundPosition: "center",
   },
-}
+};

@@ -276,8 +276,14 @@ const ProductManagement: React.FC = () => {
               },
             ]}
           >
-            <DatePicker />
+            <DatePicker
+              disabledDate={(current) => {
+                // Disable dates after today
+                return current && current > moment().endOf('day');
+              }}
+            />
           </Form.Item>
+
           <Form.Item>
             <Button type="primary" htmlType="submit">
               {editingRecord ? "Update Product" : "Create Product"}

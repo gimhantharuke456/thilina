@@ -303,12 +303,16 @@ const SalesManagement: React.FC = () => {
           <Form.Item
             name="date"
             label="Date"
-            rules={[
-              { required: true, message: "Please select the sale date!" },
-            ]}
+            rules={[{ required: true, message: "Please select the sale date!" }]}
           >
-            <DatePicker />
+            <DatePicker
+              disabledDate={(current) => {
+                // Disable past dates
+                return current && current < moment().startOf('day');
+              }}
+            />
           </Form.Item>
+
           <Form.Item>
             <Button type="primary" htmlType="submit">
               {editingRecord ? "Update Sale" : "Create Sale"}

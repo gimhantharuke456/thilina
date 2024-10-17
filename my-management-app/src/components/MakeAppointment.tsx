@@ -144,6 +144,10 @@ const MakeAppointment: React.FC = () => {
         >
           <DatePicker
             format="YYYY-MM-DD"
+            disabledDate={(current) => {
+              // Disable dates before today
+              return current && current < moment().startOf('day');
+            }}
             onChange={(date: Moment | null) =>
               setSelectedDate(date ? date.format("YYYY-MM-DD") : undefined)
             }
