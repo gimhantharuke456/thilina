@@ -9,6 +9,7 @@ import {
   Spin,
   Modal,
   Select,
+  TimePicker,
 } from "antd";
 import {
   EditOutlined,
@@ -30,6 +31,7 @@ import {
 } from "../models/EmployeeAttendanceModel";
 import { Employee } from "../models/EmpoyeeModel";
 import { getAllEmployees } from "../api/employeeService";
+import moment from 'moment';
 
 const { Search } = Input;
 
@@ -72,8 +74,8 @@ const EmployeeAttendanceManagement: React.FC = () => {
     try {
       const attendance: EmployeeAttendanceType = {
         employeeId: values.employeeId,
-        arrivalTime: values.arrivalTime,
-        departureTime: values.departureTime,
+        arrivalTime: values.arrivalTime.format("HH:mm"),
+        departureTime: values.departureTime.format("HH:mm"),
         shiftType: values.shiftType,
       };
 
@@ -97,7 +99,11 @@ const EmployeeAttendanceManagement: React.FC = () => {
   };
 
   const handleEdit = (record: EmployeeAttendance) => {
-    form.setFieldsValue(record);
+    form.setFieldsValue({
+      ...record,
+      arrivalTime: moment(record.arrivalTime, "HH:mm"),
+      departureTime: moment(record.departureTime, "HH:mm"),
+    });
     setEditingRecord(record);
     setModalOpened(true);
   };
@@ -183,6 +189,7 @@ const EmployeeAttendanceManagement: React.FC = () => {
   ];
 
   return (
+    <div style={styles.container}>
     <Spin spinning={loading}>
       <div
         style={{
@@ -224,13 +231,11 @@ const EmployeeAttendanceManagement: React.FC = () => {
           <Form.Item
             name="employeeId"
             label="Employee ID"
-            rules={[
-              { required: true, message: "Please input the employee ID!" },
-            ]}
+            rules={[{ required: true, message: "Please input the employee ID!" }]}
           >
             <Select>
               {employees.map((employee) => (
-                <Select.Option value={employee._id}>
+                <Select.Option key={employee._id} value={employee._id}>
                   {employee.name}
                 </Select.Option>
               ))}
@@ -239,27 +244,21 @@ const EmployeeAttendanceManagement: React.FC = () => {
           <Form.Item
             name="arrivalTime"
             label="Arrival Time"
-            rules={[
-              { required: true, message: "Please input the arrival time!" },
-            ]}
+            rules={[{ required: true, message: "Please input the arrival time!" }]}
           >
-            <Input />
+            <TimePicker format="HH:mm" placeholder="Select Arrival Time" />
           </Form.Item>
           <Form.Item
             name="departureTime"
             label="Departure Time"
-            rules={[
-              { required: true, message: "Please input the departure time!" },
-            ]}
+            rules={[{ required: true, message: "Please input the departure time!" }]}
           >
-            <Input />
+            <TimePicker format="HH:mm" placeholder="Select Departure Time" />
           </Form.Item>
           <Form.Item
             name="shiftType"
             label="Shift Type"
-            rules={[
-              { required: true, message: "Please select the shift type!" },
-            ]}
+            rules={[{ required: true, message: "Please select the shift type!" }]}
           >
             <Select>
               <Select.Option value="over_time">Over Time</Select.Option>
@@ -275,7 +274,20 @@ const EmployeeAttendanceManagement: React.FC = () => {
         </Form>
       </Modal>
     </Spin>
+    </div>
   );
 };
 
 export default EmployeeAttendanceManagement;
+
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundImage: 'url("/bg-4.png")', // Replace with actual image link
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+}

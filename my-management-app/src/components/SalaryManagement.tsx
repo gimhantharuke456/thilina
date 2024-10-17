@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
+import { EyeOutlined } from '@ant-design/icons';
 import {
   Form,
   Input,
@@ -9,6 +11,7 @@ import {
   Spin,
   Modal,
   DatePicker,
+  Select,
 } from "antd";
 import {
   EditOutlined,
@@ -22,12 +25,14 @@ import {
   updateSalary,
   deleteSalary,
 } from "../api/salaryService";
+import { getAllEmployees } from "../api/employeeService"; // Assuming the API is in this file
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Salary, SalarySchema, SalaryType } from "../models/SalaryModel";
-import moment from "moment";
+import dayjs, { Dayjs } from "dayjs";
 
 const { Search } = Input;
+const { Option } = Select;
 
 const SalaryManagement: React.FC = () => {
   const [form] = Form.useForm();
@@ -36,10 +41,24 @@ const SalaryManagement: React.FC = () => {
   const [filteredSalaries, setFilteredSalaries] = useState<Salary[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingRecord, setEditingRecord] = useState<Salary | null>(null);
+  const [employees, setEmployees] = useState<any[]>([]); // State to store employee list
+  const [selectedMonth, setSelectedMonth] = useState<Dayjs | null>(null); // Month filter
 
+  // Fetch salaries on component mount
   useEffect(() => {
     fetchSalaries();
   }, []);
+
+  // Fetch employees and store in state
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+  const getTotalPaymentForMonth = () => {
+    return filteredSalaries.reduce((total, salary) => {
+      return total + salary.basePay + (salary.bonus * salary.workDays);
+    }, 0).toFixed(2); // Returning total with 2 decimal points
+  };
 
   const fetchSalaries = async () => {
     setLoading(true);
@@ -54,14 +73,24 @@ const SalaryManagement: React.FC = () => {
     }
   };
 
+  const fetchEmployees = async () => {
+    setLoading(true);
+    try {
+      const response = await getAllEmployees();
+      setEmployees(response); // Store employee list
+    } catch (error) {
+      message.error("Failed to load employees.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      const date: Date = values.date
-        ? moment(values.date).toDate()
-        : new Date();
+      const date: Date = values.date ? dayjs(values.date).toDate() : new Date();
       const salary: SalaryType = {
-        name: values.name,
+        name: values.name, // Use employee name from Select
         basePay: parseFloat(values.basePay),
         bonus: parseFloat(values.bonus),
         totalPay: parseFloat(values.basePay) + parseFloat(values.bonus),
@@ -98,7 +127,7 @@ const SalaryManagement: React.FC = () => {
   const handleEdit = (record: Salary) => {
     form.setFieldsValue({
       ...record,
-      date: moment(record.date),
+      date: dayjs(record.date),
     });
     setEditingRecord(record);
     setModalOpened(true);
@@ -154,11 +183,43 @@ const SalaryManagement: React.FC = () => {
     setFilteredSalaries(filtered);
   };
 
+  const filterSalariesByMonth = (date: Dayjs | null) => {
+    if (!date) {
+      setFilteredSalaries(salaries); // If no date is selected, show all salaries
+      return;
+    }
+
+    const filtered = salaries.filter((salary) => {
+      const salaryDate = dayjs(salary.date);
+      return (
+        salaryDate.month() === date.month() && salaryDate.year() === date.year()
+      );
+    });
+
+    setFilteredSalaries(filtered); // Set the filtered data to state
+  };
+
   const columns = [
-    { title: "Name", dataIndex: "name", key: "name" },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text: string) => {
+        const [name] = text.split('+');
+        return name;
+      },
+    },
     { title: "Base Pay", dataIndex: "basePay", key: "basePay" },
     { title: "Bonus", dataIndex: "bonus", key: "bonus" },
-    { title: "Total Pay", dataIndex: "totalPay", key: "totalPay" },
+    {
+      title: "Total Pay",
+      key: "totalPay",
+      render: (text: any, record: Salary) => {
+        const { basePay, bonus, workDays } = record;
+        const totalPay = basePay + (bonus * workDays);
+        return totalPay.toFixed(2); // Display total pay with 2 decimal points
+      },
+    },
     { title: "Work Days", dataIndex: "workDays", key: "workDays" },
     {
       title: "Date",
@@ -170,27 +231,35 @@ const SalaryManagement: React.FC = () => {
     {
       title: "Action",
       key: "action",
-      render: (text: any, record: Salary) => (
-        <span>
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => handleEdit(record)}
-            type="link"
-          />
-          <Popconfirm
-            title="Are you sure you want to delete this salary?"
-            onConfirm={() => handleDelete(record._id!)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button icon={<DeleteOutlined />} type="link" danger />
-          </Popconfirm>
-        </span>
-      ),
-    },
+      render: (text: any, record: Salary) => {
+        const [name, id] = record.name.split('+'); // Split the name+id and extract the id
+        return (
+          <span>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => handleEdit(record)}
+              type="link"
+            />
+            <Popconfirm
+              title="Are you sure you want to delete this salary?"
+              onConfirm={() => handleDelete(record._id!)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button icon={<DeleteOutlined />} type="link" danger />
+            </Popconfirm>
+            <Link to={`/ViewAttendance/${id}`}>
+              <Button icon={<EyeOutlined />} type="link" />
+                Attendance
+            </Link>
+          </span>
+        );
+      },
+    }
   ];
 
   return (
+    <div style={styles.container}>
     <Spin spinning={loading}>
       <div
         style={{
@@ -204,6 +273,25 @@ const SalaryManagement: React.FC = () => {
           onSearch={handleSearch}
           style={{ width: 200 }}
         />
+
+        {/* Display total payment for the selected month */}
+        <div style={{ fontSize: 12 }}>
+          Total Payment Amount For Month Rs.
+          <strong style={{ color: 'red' }}>
+            {getTotalPaymentForMonth()}
+          </strong>
+        </div>
+
+        {/* Month Picker for filtering salaries by month */}
+        <DatePicker
+          picker="month"
+          onChange={(date) => {
+            setSelectedMonth(date);
+            filterSalariesByMonth(date);
+          }}
+          placeholder="Select month"
+        />
+
         <div>
           <Button
             icon={<PlusOutlined />}
@@ -239,34 +327,60 @@ const SalaryManagement: React.FC = () => {
           onFinish={onFinish}
           initialValues={{ remember: true }}
         >
+          {/* Select Employee */}
           <Form.Item
             label="Name"
             name="name"
-            rules={[{ required: true, message: "Please input the name!" }]}
+            rules={[{ required: true, message: "Please select an employee!" }]}
           >
-            <Input />
+            <Select
+              placeholder="Select an employee"
+              disabled={!!editingRecord} // Disable the field if editingRecord exists
+            >
+              {employees.map((employee) => (
+                <Option
+                  key={employee._id}
+                  value={`${employee.name}+${employee._id}`}
+                >
+                  {employee.name}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
 
+          {/* Other form fields */}
           <Form.Item
             label="Base Pay"
             name="basePay"
-            rules={[{ required: true, message: "Please input the base pay!" }]}
+            rules={[{ required: true, message: "Please select the base pay!" }]}
           >
-            <Input type="number" />
+            <Select placeholder="Select base pay">
+              {Array.from({ length: 19 }, (_, i) => 10000 + i * 5000).map((value) => (
+                <Select.Option key={value} value={value}>
+                  {value}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item
             label="Bonus"
             name="bonus"
-            rules={[{ required: true, message: "Please input the bonus!" }]}
+            rules={[{ required: true, message: "Please enter bonus!" }]}
           >
-            <Input type="number" />
+            <Select placeholder="Select bonus">
+              {Array.from({ length: 10 }, (_, i) => 10 + i * 10).map((value) => (
+                <Select.Option key={value} value={value}>
+                  {value}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item
             label="Work Days"
             name="workDays"
-            rules={[{ required: true, message: "Please input the work days!" }]}
+            rules={[{ required: true, message: "Please enter work days!" }]}
           >
             <Input type="number" />
           </Form.Item>
@@ -274,7 +388,7 @@ const SalaryManagement: React.FC = () => {
           <Form.Item
             label="Date"
             name="date"
-            rules={[{ required: true, message: "Please select the date!" }]}
+            rules={[{ required: true, message: "Please select a date!" }]}
           >
             <DatePicker />
           </Form.Item>
@@ -282,26 +396,34 @@ const SalaryManagement: React.FC = () => {
           <Form.Item
             label="Phone"
             name="phone"
-            rules={[
-              {
-                required: true,
-                message: "Please input the phone number!",
-                pattern: /^\+?[1-9]\d{1,14}$/,
-              },
-            ]}
+            rules={[{ required: true, message: "Please enter phone!" }]}
           >
             <Input />
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              {editingRecord ? "Update Salary" : "Create Salary"}
+              {editingRecord ? "Update" : "Create"}
             </Button>
           </Form.Item>
         </Form>
       </Modal>
+
     </Spin>
+    </div>
   );
 };
 
 export default SalaryManagement;
+
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundImage: 'url("/bg-5.jpg")', // Replace with actual image link
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+}

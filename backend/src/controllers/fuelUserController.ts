@@ -84,3 +84,23 @@ export const loginFuelUser = async (req: Request, res: Response) => {
     res.status(401).json({ message: "Authentication failed" });
   }
 };
+
+export const checkEmailAndUpdatePassword = async (req: Request, res: Response) => {
+  try {
+    const validatedData = FuelUserSchema.partial().parse(req.body);
+    const user = await fuelUserService.checkEmailAndUpdatePassword(req.body.email, validatedData);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    res.json(user);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return res.status(400).json({ message: "Validation error", errors: error.errors });
+    }
+    res.status(500).json({ message: "Error updating password" });
+  }
+};
+
+

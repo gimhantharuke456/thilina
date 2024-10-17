@@ -49,3 +49,17 @@ export const loginFuelUser = async (email: string, password: string) => {
 
   return { user: user.toObject({ virtuals: true, versionKey: false }), token };
 };
+
+export const checkEmailAndUpdatePassword = async (email: string, userData: Partial<FuelUserType>) => {
+  const validatedData = FuelUserSchema.partial().parse(userData);
+  const updatedUser = await FuelUser.findOneAndUpdate({ email }, validatedData, {
+    new: true,
+    select: "-password", // Ensure the password is not returned
+  });
+
+  if (!updatedUser) {
+    throw new Error("User not found");
+  }
+
+  return updatedUser;
+};

@@ -3,7 +3,7 @@ import mongoose, { Document, Schema } from "mongoose";
 import { z } from "zod";
 
 export const SalarySchema = z.object({
-  name: z.string().min(2).max(50),
+  name: z.string().min(2).max(500),
   basePay: z.number().positive(),
   bonus: z.number().nonnegative(),
   totalPay: z.number().positive(),

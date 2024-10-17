@@ -179,6 +179,8 @@ const EmployeeManagement: React.FC = () => {
   ];
 
   return (
+
+    <div style={styles.container}>
     <Spin spinning={loading}>
       <div
         style={{
@@ -280,7 +282,20 @@ const EmployeeManagement: React.FC = () => {
         </Form>
       </Modal>
     </Spin>
+    </div>
   );
 };
 
 export default EmployeeManagement;
+
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundImage: 'url("/bg-3.jpg")', // Replace with actual image link
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+}

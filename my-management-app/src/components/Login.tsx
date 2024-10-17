@@ -132,7 +132,7 @@ const RuchiraLankaLogin: React.FC = () => {
             <Input.Password placeholder="Password" />
           </Form.Item>
           <Link
-            to="/forgot-password"
+            to="/FrogetPassword"
             style={{ color: "white", display: "block", marginBottom: 10 }}
           >
             Forget Your Password?

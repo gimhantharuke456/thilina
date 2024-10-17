@@ -184,6 +184,7 @@ const UserManagement: React.FC = () => {
   ];
 
   return (
+    <div style={styles.container}>
     <Spin spinning={loading}>
       <div
         style={{
@@ -311,7 +312,21 @@ const UserManagement: React.FC = () => {
         </Form>
       </Modal>
     </Spin>
+    </div>
   );
 };
 
+
 export default UserManagement;
+
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundImage: 'url("/bg-1.jpg")', // Replace with actual image link
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+}

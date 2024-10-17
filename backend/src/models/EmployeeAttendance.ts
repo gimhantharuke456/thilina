@@ -7,10 +7,10 @@ export const EmployeeAttendanceSchema = z.object({
   employeeId: z.string().min(1),
   arrivalTime: z
     .string()
-    .refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date" }),
+    .refine((val) => /^\d{2}:\d{2}$/.test(val), { message: "Invalid time format" }), // HH:mm format
   departureTime: z
     .string()
-    .refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date" }),
+    .refine((val) => /^\d{2}:\d{2}$/.test(val), { message: "Invalid time format" }), // HH:mm format
   shiftType: z.enum(["over_time", "in_time", "half_time"]),
 });
 
@@ -23,8 +23,8 @@ interface IEmployeeAttendance extends Document, EmployeeAttendanceType {}
 const employeeAttendanceSchema = new Schema<IEmployeeAttendance>(
   {
     employeeId: { type: String, required: true },
-    arrivalTime: { type: String, required: true },
-    departureTime: { type: String, required: true },
+    arrivalTime: { type: String, required: true }, // Keeping as String
+    departureTime: { type: String, required: true }, // Keeping as String
     shiftType: {
       type: String,
       enum: ["over_time", "in_time", "half_time"],
